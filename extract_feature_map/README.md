@@ -11,7 +11,7 @@ The prerequisites are:
 * MatConvNet MATLAB toolbox 1.0-beta25
 
 * Images of Oxford5k and Paris6k datasets: http://www.robots.ox.ac.uk/~vgg/data/
-* Images of Holidays datasets: http://lear.inrialpes.fr/~jegou/data.php
+* Images of Holidays datasets: http://lear.inrialpes.fr/~jegou/data.php or for fixed orientation images: https://www.dropbox.com/s/f1z8pgzhkf52tcb/holidays_rotated.tar.gz?dl=0.
 * Images of Flickr100k: http://www.robots.ox.ac.uk/~vgg/data/oxbuildings/flickr100k.html
 
 * Pre-trained VGG16 model: The mat files containing the models can be downloaded at [MatConvnet website](http://www.vlfeat.org/matconvnet/pretrained/) or [my backup file](https://www.mediafire.com/file/rx1liu6xl4ii9l0/imagenet-vgg-verydeep-16.mat).
