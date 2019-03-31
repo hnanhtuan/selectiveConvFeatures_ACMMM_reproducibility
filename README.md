@@ -61,7 +61,7 @@ Files and subfolders
 |exp_table5_run_all.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Table 5. |
 |exp_table6_part1.m         | The pre-configured MATLAB script to execute and reproduce the results of experiment of Table 6 - Top section. |
 |exp_table6_part2.m         | The pre-configured MATLAB script to execute and reproduce the results of experiment of Table 6 - Bottom section. |
-
+|||
 |extract_feature_map/        |Contains files for extracting conv. features. See the README file inside this folder for more information.|
 |tools/| |
 |tools/download_compile_packages.m | The MATLAB script to download and compile MatConvnet and VlFeat libraries. |
