@@ -39,8 +39,9 @@ The code include:
 
 Usage
 =============
-1) Modify the parameters in 'option.m' file appropriately. Please see the parameter descriptions in 'option.m' file.
-2) Run the following script
+1) Firstly, please execute the script 'utils/make.m' to compile to build the mex file for FA-emb and Triangular Embedding (Temb) methods.
+2) Modify the parameters in 'option.m' file appropriately. Please see the parameter descriptions in 'option.m' file.
+3) Run the following script
 ```
 main
 ```
