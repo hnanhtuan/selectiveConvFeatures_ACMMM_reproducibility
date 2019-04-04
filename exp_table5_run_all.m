@@ -155,7 +155,6 @@ for dataset_idx=1:length(datasets)
                 fprintf ('Embedding query set in %.3fs (%.3fs/sample)\n', toc, toc/length(qimlist));
             end
 
-
             %% Evaluate
             fprintf(2, ' * Evaluate Retrieval Performance\n');
 

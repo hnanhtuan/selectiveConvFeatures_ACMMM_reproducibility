@@ -8,7 +8,13 @@ max_img_dim = 1024;
 lid         = 31;
 folder_suffix = [num2str(lid), '_', num2str(max_img_dim), '_siaMAC'];
 
-load('siaMAC_vgg.mat');
+modelfn     = 'siaMAC_vgg.mat';
+% If the model is not downloaded properly, please handle it manually.
+if ~exist(modelfn, 'file')
+    system(['wget --no-check-certificate https://www.dropbox.com/s/hq81glcxd2ei6qe/siaMAC_vgg.mat?dl=0 -O ', modelfn]);
+end
+
+load(modelfn);
 net = dagnn.DagNN.loadobj(net) ;
 net.move('gpu'); % extract on GPU
 net.conserveMemory = 0;
