@@ -11,7 +11,7 @@ data_dir = 'extract_feature_map/features/';
 work_dir = 'data/workdir/';
 
 datasets = {'paris6k', 'oxford5k'}; 
-mask_methods = {'max', 'sum', 'sift', 'none'};
+mask_methods = {'max', 'sum'};
 max_img_dims = [724, 1024];
 
 mAPs = zeros(length(datasets), length(mask_methods), length(max_img_dims));
