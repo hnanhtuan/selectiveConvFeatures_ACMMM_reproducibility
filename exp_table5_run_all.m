@@ -11,63 +11,42 @@ data_dir = 'extract_feature_map/features/';
 work_dir = 'data/workdir/';
 
 datasets = {'paris6k', 'oxford5k'}; 
-lids = [20, 22, 24, 27, 29, 31];
-final_dims = [512, 1024, 2048, 4096, 8064];
+mask_methods = {'max', 'sum', 'sift', 'none'};
+max_img_dims = [724, 1024];
 
-mAPs = zeros(length(datasets),  length(lids), length(final_dims));
+mAPs = zeros(length(datasets), length(mask_methods), length(max_img_dims));
 for dataset_idx=1:length(datasets)
     dataset = datasets{dataset_idx};
     switch dataset
-        case {'oxford5k', 'oxford105k'}
+        case 'oxford5k'
             dataset_train				= 'paris6k';        % dataset to learn the PCA-whitening on
             dataset_test 				= 'oxford5k';       % dataset to evaluate on 
-        case {'paris6k', 'paris106k'}
+        case 'paris6k'
             dataset_train				= 'oxford5k';       % dataset to learn the PCA-whitening on
             dataset_test 				= 'paris6k';        % dataset to evaluate on 
     end
     gnd_test = load(['gnd_', dataset_test, '.mat']);
-
-    %% Parameters
-    max_img_dim     = 1024;
-    enc_method      = 'tembsink';
-        % 'temb':      Triangular embedding + Sum pooling
-        % 'tembsink':  Triangular embedding + Democratic pooling
-        % 'faemb':     Fast-Function Apprximate Embdding + Democratic pooling
     
-    mask_method = 'max';
+    for mask_method_idx=1:length(mask_methods)
+        mask_method = mask_methods{mask_method_idx};
+        
+        enc_method      = 'tembsink'; % 'tembsink':  Triangular embedding + Democratic pooling
 
-    for lid_idx=1:length(lids)
-        lid = lids(lid_idx);
-
-        dataset_name  = [dataset_test, '_', num2str(lid),'_', num2str(max_img_dim)];
-
-        dataset_dir   = [data_dir, dataset_name, '/'];
-        trainset_dir  = [dataset_dir, dataset_train, '/'];
-        baseset_dir   = [dataset_dir, dataset_test, '/'];
-        queryset_dir  = [dataset_dir, dataset_test, 'q/'];
-
-        for final_dim_idx = 1:length(final_dims)
-            
-            final_dim = final_dims(final_dim_idx);
-            switch final_dim
-                case 512
-                    param.d         = 32;      
-                    param.k         = 20;      
-                case 1024
-                    param.d         = 64;      
-                    param.k         = 18;  
-                case 2048
-                    param.d         = 64;      
-                    param.k         = 34;
-                case 4096
-                    param.d         = 64;      
-                    param.k         = 66;
-                case 8064
-                    param.d         = 128;      
-                    param.k         = 64;
-            end
-
+        for max_img_dim_idx=1:length(max_img_dims)
+            max_img_dim     = max_img_dims(max_img_dim_idx);
+            lid             = 31;       % index of output layer of VGG network
+            param.d         = 64;       % final dimensionality: 1024
+            param.k         = 18;  
             truncate        = 128;                  % Truncate the first 128 dimensions
+
+            % The 'dataset_name' should be the same folder where the extracted conv.
+            % features are stored.
+            dataset_name  = [dataset_test, '_', num2str(lid),'_', num2str(max_img_dim)];
+
+            dataset_dir   = [data_dir, dataset_name, '/'];
+            trainset_dir  = [dataset_dir, dataset_train, '/'];
+            baseset_dir   = [dataset_dir, dataset_test, '/'];
+            queryset_dir  = [dataset_dir, dataset_test, 'q/'];
 
             filename_surfix = [ '_', enc_method, '_', mask_method ];
             disp(filename_surfix);
@@ -199,10 +178,10 @@ for dataset_idx=1:length(datasets)
             fprintf ('%s  %s  %s  k=%d   d=%3d  D=%5d   pw=%.2f  mAP=%.3f\n', ...
                             dataset_name, mask_method, enc_method, param.k,...
                             param.d, size(x,1), pw, map);
-            mAPs(dataset_idx, lid_idx, final_dim_idx) = map;
+            mAPs(dataset_idx, mask_method_idx, max_img_dim_idx) = map;
             fprintf(2, '================================================================\n');
         end
-    end    
-    save('results/exp_figure5.mat', 'mAPs', 'datasets', 'lids');
-    plot_figure5_effect_of_layers;
+    end
+    save('results/exp_table5.mat', 'mAPs', 'datasets', 'mask_methods', 'max_img_dims');
 end
+print_table5;

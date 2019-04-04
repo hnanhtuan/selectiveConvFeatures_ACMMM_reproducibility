@@ -53,7 +53,7 @@ Files and subfolders
 |Filename|Description|
 |--------|----------|
 |README                      | This file|
-|main.m                      | The main script for running whole process|
+|main.m                      | The main script for running whole process.|
 |opt.m                       | The script contains all parameter setting.|
 |exp_figure3_run_all.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Figure 3. |
 |exp_figure4_run_all.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Figure 4. |

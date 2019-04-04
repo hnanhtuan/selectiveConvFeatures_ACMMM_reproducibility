@@ -35,9 +35,8 @@ for dataset_idx=1:length(datasets)
     end
     gnd_test = load(['gnd_', dataset_test, '.mat']);
 
-    %% Parameters
-    max_img_dim     = 1024;
-    lid             = 31;
+    lid         = 31;       % index of output layer of VGG network
+    max_img_dim = 1024;     % max(W_I, H_I): the largest dimension of input images
     
     for enc_method_idx=1:length(enc_methods)
         enc_method = enc_methods{enc_method_idx};

@@ -21,14 +21,13 @@ switch dataset
     case 'holidays'
         dataset_train				= 'flickr5k';       % dataset to learn the PCA-whitening on
         dataset_test 				= 'holidays';       % dataset to evaluate on 
-    case 'ukb'
-        dataset_train               = 'flickr5k';       % dataset to learn the PCA-whitening on
-        dataset_test                = 'ukb';            % dataset to evaluate on 
+    otherwise
+        error('Unknown dataset')
 end
 gnd_test = load(['gnd_', dataset_test, '.mat']);
 
-lid         = 31;   % VGG layer Id 31 - 29 
-max_img_dim = 1024;
+lid         = 31;       % index of output layer of VGG network
+max_img_dim = 1024;     % max(W_I, H_I): the largest dimension of input images
 
 % The 'dataset_name' should be the same folder where the extracted conv.
 % features are stored.
@@ -38,7 +37,7 @@ dataset_dir   = [data_dir, dataset_name, '/'];
 trainset_dir  = [dataset_dir, dataset_train, '/'];
 baseset_dir   = [dataset_dir, dataset_test, '/'];
 queryset_dir  = [dataset_dir, dataset_test, 'q/'];
-flickrset_dir = [dataset_dir, 'flickr100k/'];
+flickrset_dir = [data_dir, 'flickr100k_', num2str(lid),'_', num2str(max_img_dim), '/'];
 
 
 %% Parameters
@@ -46,22 +45,26 @@ enc_method      = 'temb';
     % 'temb':      Triangular embedding + Sum pooling
     % 'tembsink':  Triangular embedding + Democratic pooling
     % 'faemb':     Fast-Function Apprximate Embdding + Democratic pooling
-mask_method     = 'max';    % 'max', 'sum50', 'none'
+    % 'fv':        Fisher Vector
+    % 'vlad':      VLAD
+mask_method     = 'max';    % 'max', 'sum', 'none'
 
 switch enc_method
     case {'temb', 'tembsink'}
         truncate        = 128;                  % Truncate the first 128 dimensions
     case 'faemb'
         truncate        = param.d*(param.d+1);  % Truncate the first d(d+1) dimensions
+    case {'fv', 'vlad'}
+        truncate        = 0;
     otherwise
-        error('Invalid Encoding method (Please choose one of following: "temb", "tembsink", "faemb")')
+        error('Invalid Encoding method (Please choose one of following: "temb", "tembsink", "faemb", "fv", "vlad")')
 end
 
 filename_surfix = [ '_', enc_method, '_', mask_method ];
 disp(filename_surfix);
 
 param.d         = 32;       % Remaining dimension of PCA pre-processing
-param.k         = 20;        % Number of codebook size       
+param.k         = 20;       % Number of codebook size (|C|)
 
 % Recommending values for retained PCA components and codebook size
 % 'temb', 'tembsink'

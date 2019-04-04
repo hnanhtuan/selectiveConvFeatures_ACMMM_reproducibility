@@ -27,8 +27,8 @@ for dataset_idx=1:length(datasets)
     end
     gnd_test = load(['gnd_', dataset_test, '.mat']);
 
-    lid         = 31;   %  conv. feature of last VGG conv. layer
-    max_img_dim = 1024;
+    lid         = 31;       % index of output layer of VGG network
+    max_img_dim = 1024;     % max(W_I, H_I): the largest dimension of input images
 
     % The 'dataset_name' should be the same folder where the extracted conv.
     % features are stored.

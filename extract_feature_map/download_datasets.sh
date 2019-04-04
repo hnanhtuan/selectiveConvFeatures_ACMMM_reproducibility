@@ -58,7 +58,7 @@ if [ -f $FILE ]; then
 else
     # We provide images which are rotated to correct the image orientation.
     echo " * Downloading $FILE ..."
-    wget https://www.dropbox.com/s/f1z8pgzhkf52tcb/holidays_rotated.tar.gz?dl=0 -O $FILE
+    wget --no-check-certificate https://www.dropbox.com/s/f1z8pgzhkf52tcb/holidays_rotated.tar.gz?dl=0 -O $FILE
 fi
 echo " * Extracting $FILE ...."
 tar -xzf $FILE -C $DATASET_DIR

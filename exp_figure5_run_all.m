@@ -11,10 +11,10 @@ data_dir = 'extract_feature_map/features/';
 work_dir = 'data/workdir/';
 
 datasets = {'paris6k', 'oxford5k'}; 
-mask_methods = {'max', 'sum50', 'sift', 'none'};
+lids = [20, 22, 24, 27, 29, 31];
 final_dims = [512, 1024, 2048, 4096, 8064];
 
-mAPs = zeros(length(datasets), length(mask_methods), length(final_dims));
+mAPs = zeros(length(datasets),  length(lids), length(final_dims));
 for dataset_idx=1:length(datasets)
     dataset = datasets{dataset_idx};
     switch dataset
@@ -27,28 +27,27 @@ for dataset_idx=1:length(datasets)
     end
     gnd_test = load(['gnd_', dataset_test, '.mat']);
 
-    lid         = 31;   %  conv. feature of last VGG conv. layer
-    max_img_dim = 1024;
-
-    % The 'dataset_name' should be the same folder where the extracted conv.
-    % features are stored.
-    dataset_name  = [dataset_test, '_', num2str(lid),'_', num2str(max_img_dim)];
-
-    dataset_dir   = [data_dir, dataset_name, '/'];
-    trainset_dir  = [dataset_dir, dataset_train, '/'];
-    baseset_dir   = [dataset_dir, dataset_test, '/'];
-    queryset_dir  = [dataset_dir, dataset_test, 'q/'];
-
     %% Parameters
+    max_img_dim = 1024;     % max(W_I, H_I): the largest dimension of input images
     enc_method      = 'tembsink';
         % 'temb':      Triangular embedding + Sum pooling
         % 'tembsink':  Triangular embedding + Democratic pooling
         % 'faemb':     Fast-Function Apprximate Embdding + Democratic pooling
     
-    for mask_method_idx=1:length(mask_methods)
-        mask_method = mask_methods{mask_method_idx};
-        
-        for final_dim_idx=1:length(final_dims)
+    mask_method = 'max';
+
+    for lid_idx=1:length(lids)
+        lid = lids(lid_idx);
+
+        dataset_name  = [dataset_test, '_', num2str(lid),'_', num2str(max_img_dim)];
+
+        dataset_dir   = [data_dir, dataset_name, '/'];
+        trainset_dir  = [dataset_dir, dataset_train, '/'];
+        baseset_dir   = [dataset_dir, dataset_test, '/'];
+        queryset_dir  = [dataset_dir, dataset_test, 'q/'];
+
+        for final_dim_idx = 1:length(final_dims)
+            
             final_dim = final_dims(final_dim_idx);
             switch final_dim
                 case 512
@@ -67,13 +66,11 @@ for dataset_idx=1:length(datasets)
                     param.d         = 128;      
                     param.k         = 64;
             end
-        
+
             truncate        = 128;                  % Truncate the first 128 dimensions
 
             filename_surfix = [ '_', enc_method, '_', mask_method ];
             disp(filename_surfix);
-
-
 
             save_param = true;              % Save the learned parameters for later usage
             save_data  = false;             % Save the processed global image representation for later usage
@@ -202,11 +199,10 @@ for dataset_idx=1:length(datasets)
             fprintf ('%s  %s  %s  k=%d   d=%3d  D=%5d   pw=%.2f  mAP=%.3f\n', ...
                             dataset_name, mask_method, enc_method, param.k,...
                             param.d, size(x,1), pw, map);
-            mAPs(dataset_idx, mask_method_idx, final_dim_idx) = map;
+            mAPs(dataset_idx, lid_idx, final_dim_idx) = map;
             fprintf(2, '================================================================\n');
         end
-    end
-    save('results/exp_figure4.mat', 'mAPs', 'datasets', 'mask_methods', 'final_dims');
-    plot_figure4_impact_of_final_dim;
+    end    
+    save('results/exp_figure5.mat', 'mAPs', 'datasets', 'lids');
+    plot_figure5_effect_of_layers;
 end
-
