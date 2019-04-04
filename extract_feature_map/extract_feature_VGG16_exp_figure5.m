@@ -4,21 +4,22 @@ run('../tools/vlfeat-0.9.21/toolbox/vl_setup')
 
 %% Parameters
 modelfn     = 'imagenet-vgg-verydeep-16.mat';
+if ~exist(modelfn, 'file')
+    websave(modelfn, 'http://www.vlfeat.org/matconvnet/models/imagenet-vgg-verydeep-16.mat');
+end
+
+max_img_dim  = 1024;           % Resize to have max(W, H)=max_img_dim
+baseDir      = 'datasets/';    % Image folder
+outputDir    = 'features/';    % Folder for conv. features
+extract_SIFT = false;          % Extract the SIFT locations
+oxford_paris = true;
+
 lids         = [20, ...             % For vgg conv4.1
                 22, ...             % For vgg conv4.2
                 24, ...             % For vgg conv4.3
                 27, ...             % For vgg conv5.1
                 29];                % For vgg conv5.2
 for lid=lids
-    max_img_dim = 1024;           % Resize to have max(W, H)=max_img_dim
-    baseDir     = 'datasets/';    % Image folder
-    outputDir   = 'features/';    % Folder for conv. features
-    extract_SIFT= false;          % Extract the SIFT locations
-
-    if ~exist(modelfn, 'file')
-        websave(modelfn, 'http://www.vlfeat.org/matconvnet/models/imagenet-vgg-verydeep-16.mat');
-    end
-
     net = load(modelfn);
     net.layers{lid} = net.layers{31};
     net.layers = {net.layers{1:lid}}; % remove fully connected layers
@@ -26,8 +27,6 @@ for lid=lids
     net = vl_simplenn_move(net, 'gpu') ;
 
     folder_suffix = [num2str(lid),'_', num2str(max_img_dim)];
-    
-    oxford_paris = true;
 
     %% Oxford5k - Paris6k
     if (oxford_paris)

@@ -3,12 +3,12 @@ run('../tools/matconvnet-1.0-beta25/matlab/vl_setupnn.m')
 run('../tools/vlfeat-0.9.21/toolbox/vl_setup')
 
 %% Parameters
-modelfn     = 'imagenet-vgg-verydeep-16.mat';
-lid         = 31;             % The index of conv. layer to extract features.
-max_img_dim = 1024;           % Resize to have max(W, H)=max_img_dim
-baseDir     = 'datasets/';    % Image folder
-outputDir   = 'features/';    % Folder for conv. features
-extract_SIFT= true;          % Extract the SIFT locations
+modelfn      = 'imagenet-vgg-verydeep-16.mat';
+lid          = 31;             % The index of conv. layer to extract features.
+max_img_dim  = 1024;           % Resize to have max(W, H)=max_img_dim
+baseDir      = 'datasets/';    % Image folder
+outputDir    = 'features/';    % Folder for conv. features
+extract_SIFT = true;          % Extract the SIFT locations
 
 if ~exist(modelfn, 'file')
     fprintf('Downloading %s ...\n', modelfn);
