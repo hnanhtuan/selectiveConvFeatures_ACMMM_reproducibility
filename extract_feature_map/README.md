@@ -14,9 +14,9 @@ The prerequisites are:
 * Images of Holidays datasets: http://lear.inrialpes.fr/~jegou/data.php or for fixed orientation images: https://www.dropbox.com/s/f1z8pgzhkf52tcb/holidays_rotated.tar.gz?dl=0.
 * Images of Flickr100k: http://www.robots.ox.ac.uk/~vgg/data/oxbuildings/flickr100k.html
 
-* Pre-trained VGG16 model: The mat files containing the models can be downloaded at [MatConvnet website](http://www.vlfeat.org/matconvnet/pretrained/) or [my backup file](https://www.mediafire.com/file/rx1liu6xl4ii9l0/imagenet-vgg-verydeep-16.mat).
+* Pre-trained VGG16 model: The mat files containing the models can be downloaded at [MatConvnet website](http://www.vlfeat.org/matconvnet/pretrained/) or [our backup file](https://www.mediafire.com/file/rx1liu6xl4ii9l0/imagenet-vgg-verydeep-16.mat).
 
-* VGG16-based siaMAC model [1]: The model file is included in `siaMAC_vgg` folder.
+* VGG16-based siaMAC model [1] ([link](https://www.dropbox.com/s/hq81glcxd2ei6qe/siaMAC_vgg.mat?dl=0) ).
 
 [1] Filip Radenović, Giorgos Tolias, and Ondřej Chum. CNN Image Retrieval Learns from BoW: Unsupervised Fine-Tuning with Hard Examples. In ECCV 2016.
 
