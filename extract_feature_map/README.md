@@ -16,7 +16,7 @@ The prerequisites are:
 
 * Pre-trained VGG16 model: The mat files containing the models can be downloaded at [MatConvnet website](http://www.vlfeat.org/matconvnet/pretrained/) or [our backup file](https://www.mediafire.com/file/rx1liu6xl4ii9l0/imagenet-vgg-verydeep-16.mat).
 
-* VGG16-based siaMAC model [1] ([link](https://www.dropbox.com/s/hq81glcxd2ei6qe/siaMAC_vgg.mat?dl=0) ).
+* VGG16-based siaMAC model [1] ([link](https://www.dropbox.com/s/hq81glcxd2ei6qe/siaMAC_vgg.mat?dl=0)).
 
 [1] Filip Radenović, Giorgos Tolias, and Ondřej Chum. CNN Image Retrieval Learns from BoW: Unsupervised Fine-Tuning with Hard Examples. In ECCV 2016.
 
