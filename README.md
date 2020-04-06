@@ -36,6 +36,7 @@ Prerequisites
 The code include:
 - The Yael library (obtained from the website https://gforge.inria.fr/frs/?group_id=2151)
   A copy of this library is included in 'tools' folder.
+- MatConvNet and VlFeat libraries, a script to automatically install these libraries is included in 'tools/'.
 
 Usage
 =============
@@ -55,13 +56,13 @@ Files and subfolders
 |README                      | This file|
 |main.m                      | The main script for running whole process.|
 |opt.m                       | The script contains all parameter setting.|
-|exp_figure3_run_all.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Figure 3. |
-|exp_figure4_run_all.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Figure 4. |
-|exp_figure5_run_all.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Figure 5. |
-|exp_table3_run_all.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Table 3. |
-|exp_table5_run_all.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Table 5. |
-|exp_table6_part1.m         | The pre-configured MATLAB script to execute and reproduce the results of experiment of Table 6 - Top section. |
-|exp_table6_part2.m         | The pre-configured MATLAB script to execute and reproduce the results of experiment of Table 6 - Bottom section. |
+|exp1_table3_framework_analysis.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Table 3. |
+|exp2_figure3_powerlaw_norm_analysis.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Figure 3. |
+|exp3_figure4_representation_dim_analysis.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Figure 4. |
+|exp4_table5_image_size_analysis.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Table 5. |
+|exp5_figure5_conv_layer_analysis.m       | The pre-configured MATLAB script to execute and reproduce the results of experiment of Figure 5. |
+|exp6_table6_compare_SOTA_part1.m         | The pre-configured MATLAB script to execute and reproduce the results of experiment of Table 6 - Top section. |
+|exp6_table6_compare_SOTA_part2.m         | The pre-configured MATLAB script to execute and reproduce the results of experiment of Table 6 - Bottom section. |
 |||
 |extract_feature_map/        |Contains files for extracting conv. features. See the README file inside this folder for more information.|
 |tools/| |

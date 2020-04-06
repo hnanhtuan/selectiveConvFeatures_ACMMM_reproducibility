@@ -9,24 +9,30 @@ addAttachedFiles(poolobj, {'triemb_map.m', 'triemb_res.mexa64', ...
 %% Dataset 
 data_dir = 'extract_feature_map/features/';
 work_dir = 'data/workdir/';
+if ~exist(work_dir, 'dir'), mkdir(work_dir); end
 
-dataset = 'paris6k'; 
+% available datasets: 'oxford5k', 'oxford105k', 'paris6k', 'paris106k',
+% 'holidays_rotated', and 'holidays_original'
+dataset = 'paris6k';    
 switch dataset
-    case {'oxford5k', 'oxford105k'}
+    case {}
         dataset_train				= 'paris6k';        % dataset to learn the PCA-whitening on
         dataset_test 				= 'oxford5k';       % dataset to evaluate on 
     case {'paris6k', 'paris106k'}
         dataset_train				= 'oxford5k';       % dataset to learn the PCA-whitening on
         dataset_test 				= 'paris6k';        % dataset to evaluate on 
-    case 'holidays'
-        dataset_train				= 'flickr5k';       % dataset to learn the PCA-whitening on
-        dataset_test 				= 'holidays';       % dataset to evaluate on 
+    case {'holidays_rotated'}
+        dataset_train				= 'flickr5k';           % dataset to learn the PCA-whitening on
+        dataset_test 				= 'holidays_rotated';  % dataset to evaluate on 
+    case {'holidays_original'}
+        dataset_train				= 'flickr5k';           % dataset to learn the PCA-whitening on
+        dataset_test 				= 'holidays_original';  % dataset to evaluate on 
     otherwise
         error('Unknown dataset')
 end
 gnd_test = load(['gnd_', dataset_test, '.mat']);
 
-lid         = 31;       % index of output layer of VGG network
+lid         = 31;       % index of output layer of VGG network (MatConvNet model)
 max_img_dim = 1024;     % max(W_I, H_I): the largest dimension of input images
 
 % The 'dataset_name' should be the same folder where the extracted conv.
@@ -45,15 +51,15 @@ enc_method      = 'temb';
     % 'temb':      Triangular embedding + Sum pooling
     % 'tembsink':  Triangular embedding + Democratic pooling
     % 'faemb':     Fast-Function Apprximate Embdding + Democratic pooling
-    % 'fv':        Fisher Vector
-    % 'vlad':      VLAD
-mask_method     = 'max';    % 'max', 'sum', 'none'
+    % 'fv':        Fisher Vector (as proposed in original paper)
+    % 'vlad':      VLAD (as proposed in original paper)
+mask_method     = 'max';    % 'max', 'sum', 'sift', (as proposed in original paper)'none'
 
 switch enc_method
     case {'temb', 'tembsink'}
-        truncate        = 128;                  % Truncate the first 128 dimensions
+        truncate        = 128;                  % Truncate the first 128 dimensions (post-processing)
     case 'faemb'
-        truncate        = param.d*(param.d+1);  % Truncate the first d(d+1) dimensions
+        truncate        = param.d*(param.d+1);  % Truncate the first d(d+1) dimensions (post-processing)
     case {'fv', 'vlad'}
         truncate        = 0;
     otherwise

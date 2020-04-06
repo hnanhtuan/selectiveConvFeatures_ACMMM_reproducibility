@@ -35,6 +35,7 @@ else
     vtrain = param.Ud' * vtrain;                        % PCA
     vtrain = yael_vecs_normalize(vtrain);               % L2 normalize
     
+    % Learning dictionary and other parameters for embedding
     switch enc_method
         case {'temb', 'tembsink', 'tembmax'}
             param.C = yael_kmeans (vtrain, param.k, 'init', 1, 'redo', 2, 'niter', 100);
@@ -63,13 +64,14 @@ else
     end
     clear vtrain
     
+    % Applying the embedding on training vectors
     vecs_train = cell(length(gnd_train.imlist), 1);
     parfor i=1:length(gnd_train.imlist)
         vecs_train{i} = vecpostproc(embedding(fea_train{i}, param, enc_method));
     end
     clear fea_train
     
-    % Learn RN
+    % Learn RN (post-processing)
     vecs_train = cell2mat(vecs_train');
     param = learn_rn(vecs_train, param); 
     clear vecs_train
@@ -83,7 +85,7 @@ vecs_base_file = [dataset_dir, 'vecs_base_', num2str(param.k), '_', ...
             num2str(param.d),  filename_surfix, '.mat'];
 
 if (exist(vecs_base_file, 'file') && ~overwrite_olddata)
-    fprintf(2, ' * Load database image representation.\n');
+    fprintf(2, ' * Load pre-learned database image representation.\n');
     load(vecs_base_file);
 else   
     fprintf(2, ' * Processing database images ... \n');
@@ -107,7 +109,7 @@ else
                num2str(param.d),  filename_surfix, '.mat'];
     
     if (exist(qvecs_file, 'file') && ~overwrite_olddata)
-        fprintf(2, ' * Load query image representation.\n');
+        fprintf(2, ' * Load pre-learned query image representation.\n');
         load(qvecs_file);
     else   
         fprintf(2, ' * Processing query images ... \n');
@@ -131,7 +133,7 @@ if (strcmp(dataset, 'oxford105k') || strcmp(dataset, 'paris106k'))
     vecs_flickr_file = [dataset_dir, 'vecs_flickr_', num2str(param.k), '_', ...
                 num2str(param.d),  filename_surfix, '.mat'];
     if (exist(vecs_flickr_file, 'file') && ~overwrite_olddata)
-        fprintf(2, ' * Load flickr image representation.\n');
+        fprintf(2, ' * Load pre-learned flickr image representation.\n');
         load(vecs_flickr_file);
     else   
         fprintf(2, ' * Processing flickr images ... \n');
