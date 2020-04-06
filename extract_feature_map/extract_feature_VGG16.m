@@ -37,6 +37,7 @@ query_set_paris   = [out_folder_paris, 'paris6kq/'];
 base_set_oxford   = [out_folder_oxford, 'oxford5k/'];
 query_set_oxford  = [out_folder_oxford, 'oxford5kq/'];
 
+if (~exist(outputDir, 'dir')),         mkdir(outputDir); end;
 if (~exist(out_folder_oxford, 'dir')), mkdir(out_folder_oxford); end;
 if (~exist(out_folder_paris, 'dir')),  mkdir(out_folder_paris);  end;
 if (~exist(base_set_paris, 'dir')),    mkdir(base_set_paris);    end;
@@ -130,6 +131,8 @@ end
 if(flickr100k)
     im_folder  = [baseDir, 'oxc1_100k/'];
     out_folder = [outputDir, 'flickr100k_', folder_suffix, '/'];
+    
+    if (~exist(outputDir, 'dir')),  mkdir(outputDir); end;
     if (~exist(out_folder, 'dir')), mkdir(out_folder); end;
     
     subDirList = dir([im_folder]);
@@ -159,11 +162,13 @@ if(flickr100k)
     end
 end
 
-%% Holidays
+%% Holidays original
 if (holidays)
-    im_folder  = [baseDir, 'holidays/'];
-    out_folder = [outputDir, 'holidays_', folder_suffix, '/'];
-    base_set   = [out_folder, 'holidays/'];
+    im_folder  = [baseDir, 'holidays_original/'];
+    out_folder = [outputDir, 'holidays_original_', folder_suffix, '/'];
+    base_set   = [out_folder, 'holidays_original/'];
+    
+    if (~exist(outputDir, 'dir')),  mkdir(outputDir); end;
     if (~exist(out_folder, 'dir')), mkdir(out_folder); end;
     if (~exist(base_set, 'dir')),   mkdir(base_set); end;
 
@@ -176,27 +181,65 @@ if (holidays)
         fea = extract_feature( I, net );
         save([base_set, strrep(imlist(i).name, '.jpg', '_fea.mat')], 'fea');
         
-        % sift location
-        I = single(rgb2gray(I));
-        [f, ~] = vl_sift(I, 'PeakThresh', 4, 'edgethresh', 10);
-        H = size(I, 1); W = size(I, 2);
-        save([base_set, strrep(imlist(i).name, '.jpg', '_sift.mat')], 'f', 'W', 'H');
+        if extract_SIFT
+            % sift location
+            I = single(rgb2gray(I));
+            [f, ~] = vl_sift(I, 'PeakThresh', 4, 'edgethresh', 10);
+            H = size(I, 1); W = size(I, 2);
+            save([base_set, strrep(imlist(i).name, '.jpg', '_sift.mat')], 'f', 'W', 'H');
+        end
         
         disp([num2str(i), ' --- ', imlist(i).name]);	
     end
-    system(['ln -sv ' pwd '/' out_folder 'holidays/ ' pwd '/' out_folder 'holidaysq']);
+    system(['ln -sv ' pwd '/' out_folder 'holidays_original/ ' pwd '/' out_folder 'holidays_originalq']);
     
     % random sample 5000 samples from Flickr100k, called Flickr5k
     out_folder_flickr5k = [outputDir, 'flickr5k_', folder_suffix, '/'];
     in_folder = [outputDir, 'flickr100k_', folder_suffix, '/'];
-    if (~exist(out_folder_flickr5k, 'dir')), mkdir(out_folder_flickr5k); end;
+    if (~exist(out_folder_flickr5k, 'dir')), mkdir(out_folder_flickr5k); end;   
     file_list = dir([in_folder, '*_fea.mat']);
     rand_idx = randperm(length(file_list));
     for i=1:5000
         copyfile([in_folder, file_list(rand_idx(i)).name], ...
                  [out_folder_flickr5k, file_list(rand_idx(i)).name]);
-        copyfile([in_folder, strrep(file_list(rand_idx(i)).name, '_fea.mat', '_sift.mat')], ...
+        if extract_SIFT
+            copyfile([in_folder, strrep(file_list(rand_idx(i)).name, '_fea.mat', '_sift.mat')], ...
                  [out_folder_flickr5k, strrep(file_list(rand_idx(i)).name, '_fea.mat', '_sift.mat')]);
+        end
     end
+    system(['ln -sv ' pwd '/' out_folder_flickr5k  '  ' pwd '/' out_folder 'flickr5k']);
+end
+
+%% Holidays rotated
+if (holidays)
+    im_folder  = [baseDir, 'holidays_rotated/'];
+    out_folder = [outputDir, 'holidays_rotated_', folder_suffix, '/'];
+    base_set   = [out_folder, 'holidays_rotated/'];
+    
+    if (~exist(outputDir, 'dir')),  mkdir(outputDir); end;
+    if (~exist(out_folder, 'dir')), mkdir(out_folder); end;
+    if (~exist(base_set, 'dir')),   mkdir(base_set); end;
+
+    imlist     = dir([im_folder, '*.jpg']);
+
+    for i=1:length(imlist)
+        orig = imread([im_folder, imlist(i).name]);
+        ratio = max_img_dim/max(size(orig, 1), size(orig, 2));
+        I = imresize(orig, ratio);
+        fea = extract_feature( I, net );
+        save([base_set, strrep(imlist(i).name, '.jpg', '_fea.mat')], 'fea');
+        
+        if extract_SIFT
+            % sift location
+            I = single(rgb2gray(I));
+            [f, ~] = vl_sift(I, 'PeakThresh', 4, 'edgethresh', 10);
+            H = size(I, 1); W = size(I, 2);
+            save([base_set, strrep(imlist(i).name, '.jpg', '_sift.mat')], 'f', 'W', 'H');
+        end
+        
+        disp([num2str(i), ' --- ', imlist(i).name]);	
+    end
+    system(['ln -sv ' pwd '/' out_folder 'holidays_rotated/ ' pwd '/' out_folder 'holidays_rotatedq']);
+    
     system(['ln -sv ' pwd '/' out_folder_flickr5k  '  ' pwd '/' out_folder 'flickr5k']);
 end

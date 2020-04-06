@@ -1,5 +1,5 @@
 run('../tools/matconvnet-1.0-beta25/matlab/vl_setupnn.m')
-
+% addpath('siaMAC_vgg');
 
 %% Parameters
 baseDir     = 'datasets/';    % Image folder
@@ -18,10 +18,12 @@ load(modelfn);
 net = dagnn.DagNN.loadobj(net) ;
 net.move('gpu'); % extract on GPU
 net.conserveMemory = 0;
-%% Selecting dataset to extract conv. feature
-paris_oxford    = false;
-flickr100k      = false;
-holidays        = false;
+%%
+paris_oxford    = true;
+flickr100k      = true;
+% Please note that flickr100k feature need to be extracted before
+% extracting feature for holidays datasets
+holidays        = true;
 
 %% Flickr100k
 if (flickr100k)
@@ -54,9 +56,9 @@ end
 
 %% Holidays
 if (holidays)
-    im_folder  = [baseDir, 'holidays/'];
-    out_folder = [outputDir, 'holidays_', folder_suffix, '/'];
-    base_set   = [out_folder, 'holidays/'];
+    im_folder  = [baseDir, 'holidays_rotated/'];
+    out_folder = [outputDir, 'holidays_rotated_', folder_suffix, '/'];
+    base_set   = [out_folder, 'holidays_rotated/'];
     
     if (~exist(outputDir, 'dir')),  mkdir(outputDir); end;
     if (~exist(out_folder, 'dir')), mkdir(out_folder); end;
@@ -73,7 +75,7 @@ if (holidays)
         
         disp([num2str(i), ' --- ', imlist(i).name]);	
     end
-    system(['ln -sv ' pwd '/' out_folder 'holidays/ ' pwd '/' out_folder 'holidaysq']);
+    system(['ln -sv ' pwd '/' out_folder 'holidays_rotated/ ' pwd '/' out_folder 'holidays_rotatedq']);
     
     % random sample 5000 samples from Flickr100k, called Flickr5k
     out_folder_flickr5k = [outputDir, 'flickr5k_', folder_suffix, '/'];
@@ -108,12 +110,6 @@ if (~exist(query_set_paris, 'dir')),   mkdir(query_set_paris);   end;
 if (~exist(base_set_oxford, 'dir')),   mkdir(base_set_oxford);   end;
 if (~exist(query_set_oxford, 'dir')),  mkdir(query_set_oxford);  end;
 
-% These links should be created only 1 time.
-system(['ln -sv ' pwd '/' out_folder_oxford 'oxford5k/ ' pwd '/' out_folder_paris 'oxford5k']);
-system(['ln -sv ' pwd '/' out_folder_oxford 'oxford5kq/ ' pwd '/' out_folder_paris 'oxford5kq']);
-system(['ln -sv ' pwd '/' out_folder_paris 'paris6k/ ' pwd '/' out_folder_oxford 'paris6k']);
-system(['ln -sv ' pwd '/' out_folder_paris 'paris6kq/ ' pwd '/' out_folder_oxford 'paris6kq']);
-
 gnd_oxford = load('gnd_oxford5k.mat');
 gnd_paris  = load('gnd_paris6k.mat');  
 
@@ -142,7 +138,7 @@ for i=1:length(qimlist)
     save([query_set_paris, qimlist{i}, '_fea.mat'], 'fea');
     disp([num2str(i), ' --- ', qimlist{i}]);	
 end
-%%
+
 for i=1:length(gnd_oxford.imlist)
     I = imread([im_folder_oxford, gnd_oxford.imlist{i}, '.jpg']);
     ratio = 1024/max(size(I, 1), size(I, 2));
@@ -155,9 +151,8 @@ for i=1:length(gnd_oxford.imlist)
     save([base_set_oxford, gnd_oxford.imlist{i}, '_fea.mat'], 'fea');
     disp([num2str(i), ' --- ', gnd_oxford.imlist{i}]);	
 end
-%%
-qimlist = {gnd_oxford.imlist{gnd_oxford.qidx}};
 
+qimlist = {gnd_oxford.imlist{gnd_oxford.qidx}};
 for i=1:length(qimlist)
     I = crop_qim([im_folder_oxford, qimlist{i}, '.jpg'], gnd_oxford.gnd(i).bbx);
     if (min(size(I, 1), size(I, 2)) < 224)
@@ -169,4 +164,10 @@ for i=1:length(qimlist)
     save([query_set_oxford, qimlist{i}, '_fea.mat'], 'fea');
     disp([num2str(i), ' --- ', qimlist{i}]);	
 end
+
+% These links should be created only 1 time.
+system(['ln -sv ' pwd '/' out_folder_oxford 'oxford5k/ ' pwd '/' out_folder_paris 'oxford5k']);
+system(['ln -sv ' pwd '/' out_folder_oxford 'oxford5kq/ ' pwd '/' out_folder_paris 'oxford5kq']);
+system(['ln -sv ' pwd '/' out_folder_paris 'paris6k/ ' pwd '/' out_folder_oxford 'paris6k']);
+system(['ln -sv ' pwd '/' out_folder_paris 'paris6kq/ ' pwd '/' out_folder_oxford 'paris6kq']);
 end
