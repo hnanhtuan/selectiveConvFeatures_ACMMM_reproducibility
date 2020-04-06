@@ -1,11 +1,19 @@
 %% Vlfeat
+if (~exist('vlfeat-0.9.21-bin.tar.gz', 'file'))
 system('wget -c --no-check-certificate http://www.vlfeat.org/download/vlfeat-0.9.21-bin.tar.gz');
+end
+if (~exist('vlfeat-0.9.21', 'dir'))
 system('tar -xvzf vlfeat-0.9.21-bin.tar.gz ');
+end
 
 %% MatConvnet
 % download
+if (~exist('matconvnet-1.0-beta25.tar.gz', 'file'))
 system('wget -c --no-check-certificate http://www.vlfeat.org/matconvnet/download/matconvnet-1.0-beta25.tar.gz');
+end
+if (~exist('matconvnet-1.0-beta25', 'dir'))
 system('tar -xvzf matconvnet-1.0-beta25.tar.gz');
+end
 
 % Compile matconvnet library
 addpath(genpath('matconvnet-1.0-beta25'));
