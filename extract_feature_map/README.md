@@ -40,10 +40,10 @@ Files
 |download_datasets.sh |       The bash script to download all datasets mentioned above. Please comment out the appropriate section if you do not want to download any dataset.
 |extract_feature_VGG16.m | The MATLAB script to extract conv. features using the pretrained VGG16 model.. |
 |extract_feature_VGG16_main.m | The pre-configured MATLAB script to extract conv. features using the pretrained VGG16 model required in majority of the experiments. |
-|extract_feature_VGG16_exp_table5.m | The pre-configured MATLAB script to extract the additional conv. features required in experiment of table 5. |
-|extract_feature_VGG16_exp_figure5.m | The pre-configured MATLAB script to extract the additional conv. features required in experiment of figure 5. |
+|extract_feature_VGG16_exp4_table5.m | The pre-configured MATLAB script to extract the additional conv. features required in experiment of table 5. |
+|extract_feature_VGG16_exp5_figure5.m | The pre-configured MATLAB script to extract the additional conv. features required in experiment of figure 5. |
 |extract_feature_siaMAC.m | The MATLAB script to extract conv. features using the siaMAC model. |
-|extract_feature_siaMAC_exp_table6.m| The pre-configured MATLAB script to extract the additional conv. features using the siaMAC model required in experiment of table 6. |
+|extract_feature_siaMAC_exp6_table6.m| The pre-configured MATLAB script to extract the additional conv. features using the siaMAC model required in experiment of table 6. |
 |extract_feature.m|           The function that execute the forward pass to get the conv. feature.|
 |crop_qim.m        |          Function to crop image based on provided bounding box for Oxford5k and Paris6k datasets.|
 |||
